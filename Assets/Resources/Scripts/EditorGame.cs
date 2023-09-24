@@ -5,7 +5,7 @@ using UnityEngine;
 public class EditorGame : MonoBehaviour
 {
     [SerializeField] Camera m_Camera = null;
-    [SerializeField] EditorHudUI m_EditorHudUI = null;
+    [SerializeField] Editor_HudUI m_EditorHudUI = null;
     [SerializeField] GameObject m_NotePref = null;
     [SerializeField] Transform m_NoteParent = null;
 
@@ -13,7 +13,26 @@ public class EditorGame : MonoBehaviour
 
     private void Start()
     {
-        m_EditorHudUI.OnDelegate = new EditorHudUI.DelegateFunc(CreateNotes);
+        m_EditorHudUI.OnDelegate = new Editor_HudUI.DelegateFunc(CreateNotes);
+        m_EditorHudUI.OnDelegate2 = new Editor_HudUI.DelegateFunc2(MoveCamera);
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                if(hit.transform.tag == "Note")
+                {
+
+                }
+
+            }
+        }
     }
 
     void CreateNotes(int count)
@@ -26,5 +45,10 @@ public class EditorGame : MonoBehaviour
             NoteLine noteLine = go.GetComponent<NoteLine>();
             m_NoteLines.Add(noteLine);
         }
+    }
+
+    void MoveCamera(float v)
+    {
+        m_Camera.transform.position = new Vector2(0, v);
     }
 }
