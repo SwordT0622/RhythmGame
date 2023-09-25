@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] SpriteRenderer m_SpriteRender = null;
+    int curIdx = -1;
 
-    // Update is called once per frame
-    void Update()
+    public void SetNote(int i)
     {
-        
+        if (curIdx == i)
+        {
+            m_SpriteRender.color = new Color(0, 0, 0, 0);
+            curIdx = -1;
+            return;
+        }
+
+        switch (i)
+        {
+            case 0:
+                {
+                    m_SpriteRender.color = new Color(1, 1, 1, 1);
+                    curIdx = 0;
+                    break;
+                }
+        }
     }
 }

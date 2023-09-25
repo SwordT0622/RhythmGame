@@ -10,6 +10,7 @@ public class EditorGame : MonoBehaviour
     [SerializeField] Transform m_NoteParent = null;
 
     List<NoteLine> m_NoteLines = new List<NoteLine>();
+    List<int[]> m_NoteInfos = new List<int[]>();
 
     private void Start()
     {
@@ -28,9 +29,11 @@ public class EditorGame : MonoBehaviour
             {
                 if(hit.transform.tag == "Note")
                 {
+                    Note note = hit.transform.GetComponent<Note>();
+                    note.SetNote(0);
 
+                    Debug.Log("≥Î∆Æ");
                 }
-
             }
         }
     }
@@ -43,6 +46,7 @@ public class EditorGame : MonoBehaviour
             go.transform.localPosition = new Vector3(0, m_NoteLines.Count * EditorMgr.Inst.editorInfo.spacing, 0);
 
             NoteLine noteLine = go.GetComponent<NoteLine>();
+            noteLine.Initialize(m_NoteInfos[i]);
             m_NoteLines.Add(noteLine);
         }
     }
