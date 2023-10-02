@@ -5,7 +5,7 @@ using UnityEngine;
 public class Note : MonoBehaviour
 {
     [SerializeField] SpriteRenderer m_SpriteRender = null;
-    int curIdx = -1;
+    public int curIdx = -1;
 
     public void SetNote(int i)
     {

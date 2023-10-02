@@ -49,6 +49,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff97b8a6d38a4bf4bb500b56dae460e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Notes:
+  - {fileID: 1840261018089095528}
+  - {fileID: 1437157525065168364}
+  - {fileID: 1707545367978374560}
+  - {fileID: 6497112773128306799}
 --- !u!1 &3259385622741471018
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpriteRender: {fileID: 5382589960732878702}
+  curIdx: -1
 --- !u!65 &4913577888168996017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -268,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpriteRender: {fileID: 8665396461151165483}
+  curIdx: -1
 --- !u!65 &2370827520329923042
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -388,6 +395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpriteRender: {fileID: 5147861034238590448}
+  curIdx: -1
 --- !u!65 &6339877586657529889
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -508,6 +516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpriteRender: {fileID: 6803491623599409621}
+  curIdx: -1
 --- !u!65 &6037531560960493306
 BoxCollider:
   m_ObjectHideFlags: 0
