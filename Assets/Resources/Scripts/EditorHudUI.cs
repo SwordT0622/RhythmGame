@@ -4,13 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Editor_HudUI : MonoBehaviour
+public class EditorHudUI : MonoBehaviour
 {
     [SerializeField] EditorGame m_Game = null;
     [SerializeField] InputField m_NoteCountInput = null;
     [SerializeField] InputField m_PatternNameInput = null;
     [SerializeField] Button m_AddBtn = null;
     [SerializeField] Button m_SaveBtn = null;
+    [SerializeField] Button m_LoadBtn = null;
     [SerializeField] Slider m_SpacingSlider = null;
     [SerializeField] Slider m_SpeedSlider = null;
     [SerializeField] Text m_SpacingTxt = null;
@@ -28,6 +29,7 @@ public class Editor_HudUI : MonoBehaviour
     {
         m_AddBtn.onClick.AddListener(OnClicked_Add);
         m_SaveBtn.onClick.AddListener(OnClicked_Save);
+        m_LoadBtn.onClick.AddListener(OnClicked_Load);
         m_SpacingSlider.onValueChanged.AddListener(OnValueChanged_Spacing);
         m_SpeedSlider.onValueChanged.AddListener(OnValueChanged_Speed);
         m_NoteLineSlider.onValueChanged.AddListener(OnValueChanged_NoteLine);
@@ -56,6 +58,12 @@ public class Editor_HudUI : MonoBehaviour
         m_Game.Save(pathName);
     }
 
+    void OnClicked_Load()
+    {
+        string pathName = "Assets/Resources/Patterns/" + m_PatternNameInput.text + ".txt";
+        m_Game.Load(pathName);
+    }
+
     void OnValueChanged_Spacing(float v)
     {
         EditorMgr.Inst.editorInfo.spacing = v / 100;
@@ -69,5 +77,12 @@ public class Editor_HudUI : MonoBehaviour
     {
         EditorMgr.Inst.editorInfo.speed = v / 10;
         m_SpeedTxt.text = string.Format("{0:0.0}", v / 10);
+    }
+
+    public void SetSliders()
+    {
+        m_NoteLineSlider.maxValue = EditorMgr.Inst.editorInfo.noteCount * EditorMgr.Inst.editorInfo.spacing;
+        m_SpacingSlider.value = EditorMgr.Inst.editorInfo.spacing * 100;
+        m_SpeedSlider.value = EditorMgr.Inst.editorInfo.speed * 10;
     }
 }
