@@ -8,5 +8,5 @@ public class EditorInfo
     public float speed = 0;
     public int noteCount = 0;
 
-    public byte curNoteType = 0;
+    public NoteType curNoteType = NoteType.None;
 }

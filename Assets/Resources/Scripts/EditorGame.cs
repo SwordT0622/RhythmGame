@@ -30,7 +30,8 @@ public class EditorGame : MonoBehaviour
                 if(hit.transform.tag == "Note")
                 {
                     Note note = hit.transform.GetComponent<Note>();
-                    note.SetNote(0);
+                    int noteType = (int)EditorMgr.Inst.editorInfo.curNoteType;
+                    note.SetNote(noteType);
 
                     Debug.Log("≥Î∆Æ");
                 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class EditorHudUI : MonoBehaviour
     [SerializeField] Slider m_SpeedSlider = null;
     [SerializeField] Text m_SpacingTxt = null;
     [SerializeField] Text m_SpeedTxt = null;
+    [SerializeField] Toggle[] m_NoteTypeTgls = null;
 
     [SerializeField] Slider m_NoteLineSlider = null;
 
@@ -42,6 +44,17 @@ public class EditorHudUI : MonoBehaviour
         m_SpacingSlider.onValueChanged.AddListener(OnValueChanged_Spacing);
         m_SpeedSlider.onValueChanged.AddListener(OnValueChanged_Speed);
         m_NoteLineSlider.onValueChanged.AddListener(OnValueChanged_NoteLine);
+
+        for(int i = 0; i < m_NoteTypeTgls.Length; i++)
+        {
+            int idx = i;
+            m_NoteTypeTgls[i].onValueChanged.AddListener((bool isOn) =>
+            {
+                OnValueChanged_NoteType(isOn, idx);
+            });
+        }
+
+        EditorMgr.Inst.editorInfo.curNoteType = 0;
     }
 
     private void FixedUpdate()
@@ -107,6 +120,12 @@ public class EditorHudUI : MonoBehaviour
     {
         EditorMgr.Inst.editorInfo.speed = v / 100;
         m_SpeedTxt.text = string.Format("{0:0.00}", v / 100);
+    }
+    
+    void OnValueChanged_NoteType(bool isOn, int idx)
+    {
+        if (isOn)
+            EditorMgr.Inst.editorInfo.curNoteType = (NoteType)idx;
     }
 
     public void SetSliders()

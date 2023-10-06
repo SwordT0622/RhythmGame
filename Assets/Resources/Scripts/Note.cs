@@ -24,6 +24,18 @@ public class Note : MonoBehaviour
                     curIdx = 0;
                     break;
                 }
+            case 1:
+                {
+                    m_SpriteRender.color = new Color(1, 1, 0, 1);
+                    curIdx = 1;
+                    break;
+                }
+            case 2:
+                {
+                    m_SpriteRender.color = new Color(1, 0, 0, 1);
+                    curIdx = 2;
+                    break;
+                }
         }
     }
 }
