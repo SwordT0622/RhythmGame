@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Note
   - Note0
+  - Note1
+  - Note2
   layers:
   - Default
   - TransparentFX
