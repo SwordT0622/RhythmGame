@@ -1,19 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameGame : MonoBehaviour
 {
+    const float RATELINE = -3.288f;
     [SerializeField] Transform m_NoteParent = null;
     [SerializeField] GameObject[] m_NotePrefabs = null;
     [SerializeField] Transform[] m_NoteLines = null;
 
     public bool[] isHoleLine = new bool[4];
 
+    private void Start()
+    {
+        Initialize();
+    }
+
     public void Initialize()
     {
+        float gameSpeed = GameMgr.Inst.gameInfo.gameSpeed;
+        float noteSpeed = GameMgr.Inst.gameInfo.noteSpeed;
 
+        for(int i = 0; i < m_NoteLines.Length; i++)
+        {
+            m_NoteLines[i].position = new Vector3(m_NoteLines[i].position.x, m_NoteLines[i].position.y - (0.25f * gameSpeed * noteSpeed), 0);
+        }
     }
 
     private void Update()
@@ -66,33 +79,16 @@ public class GameGame : MonoBehaviour
         float noteSpeed = GameMgr.Inst.gameInfo.noteSpeed;
         float dis = 0;
 
-        if (Physics.Raycast(m_NoteLines[line].position, Vector3.up, out hit, 0.25f * gameSpeed * noteSpeed))
+        Vector3 startPos = m_NoteLines[line].position;
+
+        int layerMask = 1 << LayerMask.NameToLayer("Note");
+
+        if (Physics.Raycast(startPos, Vector3.up, out hit, 0.5f * gameSpeed * noteSpeed, layerMask))
         {
-            dis = hit.transform.position.y - m_NoteLines[line].position.y;
-
-            if (hit.collider.tag == "Note0")
-            {
-                CheckRate(dis / gameSpeed / noteSpeed);
-                Destroy(hit.collider.gameObject);
-                return;
-            }
-            else if (hit.collider.tag == "Note1")
-            {
-                return;
-            }
-            else if (hit.collider.tag == "Note2")
-            {
-                CheckRate(dis / gameSpeed / noteSpeed);
-
-                CreateNote(0, line, hit.transform.localPosition.y + GameMgr.Inst.gameInfo.doubleNoteValue * GameMgr.Inst.gameInfo.noteSpace * GameMgr.Inst.gameInfo.gameSpeed * GameMgr.Inst.gameInfo.noteSpeed);
-                Destroy(hit.collider.gameObject);
-                return;
-            }
-        }
-
-        if (Physics.Raycast(m_NoteLines[line].position, Vector3.down, out hit, 0.25f * GameMgr.Inst.gameInfo.gameSpeed * GameMgr.Inst.gameInfo.noteSpeed))
-        {
-            dis = m_NoteLines[line].position.y - hit.transform.position.y;
+            if(hit.transform.position.y > RATELINE)
+                dis = hit.transform.position.y - RATELINE;
+            else
+                dis = RATELINE - hit.transform.position.y;
 
             if (hit.collider.tag == "Note0")
             {

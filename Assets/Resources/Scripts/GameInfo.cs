@@ -18,4 +18,7 @@ public class GameInfo
             return totalRate * 1f / totalNote;
         }
     }
+
+    public int BGMVolume = 5;
+    public int SFXVolume = 5;
 }

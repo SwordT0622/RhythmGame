@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3895035258177867386}
   - component: {fileID: 6318080961222236441}
   - component: {fileID: 149816221221711017}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Note0
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
