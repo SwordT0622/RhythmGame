@@ -75,16 +75,41 @@ public class EditorGame : MonoBehaviour
         FileStream fs = new FileStream(pathName, FileMode.Create);
         StreamWriter sw = new StreamWriter(fs);
 
+        sw.WriteLine(EditorMgr.Inst.editorInfo.spacing);
+        sw.WriteLine(EditorMgr.Inst.editorInfo.speed);
+
+        int noteCount = 0;
         sw.WriteLine(EditorMgr.Inst.editorInfo.noteCount);
         for (int i = 0; i < m_NoteLines.Count; i++)
         {
             int[] info = m_NoteLines[i].GetNoteInfos();
 
             sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}\n", info[0], info[1], info[2], info[3]));
+            for(int j = 0; j < info.Length; j++)
+            {
+                switch (info[j])
+                {
+                    case 0:
+                        {
+                            noteCount += 1;
+                            break;
+                        }
+                    case 1:
+                        {
+                            noteCount += 1;
+                            break;
+                        }
+                    case 2:
+                        {
+                            noteCount += 2;
+                            break;
+                        }
+                }
+            }
         }
 
-        sw.WriteLine(EditorMgr.Inst.editorInfo.spacing);
-        sw.WriteLine(EditorMgr.Inst.editorInfo.speed);
+        sw.WriteLine(noteCount);
+        sw.WriteLine();
 
         sw.Close();
         fs.Close();
@@ -94,6 +119,9 @@ public class EditorGame : MonoBehaviour
     {
         FileStream fs = new FileStream(pathName, FileMode.Open);
         StreamReader sr = new StreamReader(fs);
+
+        float spacing = float.Parse(sr.ReadLine());
+        float speed = float.Parse(sr.ReadLine());
 
         int count = int.Parse(sr.ReadLine());
         for(int i = 0; i < count; i++)
@@ -112,8 +140,7 @@ public class EditorGame : MonoBehaviour
             sr.ReadLine();
         }
 
-        float spacing = float.Parse(sr.ReadLine());
-        float speed = float.Parse(sr.ReadLine());
+        int noteCount = int.Parse(sr.ReadLine());
 
         sr.Close();
         fs.Close();

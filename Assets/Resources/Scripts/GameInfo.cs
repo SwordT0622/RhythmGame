@@ -10,6 +10,7 @@ public class GameInfo
     public int curCombo = 0;
     public int totalNote = 0;
     public int totalRate = 0;
+    public int totalNoteCount = 0;
     public float doubleNoteValue = 2;
     public float averageRate
     {
@@ -21,4 +22,6 @@ public class GameInfo
 
     public int BGMVolume = 5;
     public int SFXVolume = 5;
+    public int curSongIdx = 0;
+    public string curSongDifference = "";
 }

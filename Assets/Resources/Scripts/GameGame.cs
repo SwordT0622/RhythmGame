@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using Unity.VisualScripting;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class GameGame : MonoBehaviour
 {
@@ -10,6 +9,9 @@ public class GameGame : MonoBehaviour
     [SerializeField] Transform m_NoteParent = null;
     [SerializeField] GameObject[] m_NotePrefabs = null;
     [SerializeField] Transform[] m_NoteLines = null;
+    [SerializeField] VideoPlayer m_BGAPlayer = null;
+    [SerializeField] MeshRenderer m_Mesh = null;
+    [SerializeField] Material[] m_Materials = null;
 
     public bool[] isHoleLine = new bool[4];
 
@@ -20,13 +22,46 @@ public class GameGame : MonoBehaviour
 
     public void Initialize()
     {
-        float gameSpeed = GameMgr.Inst.gameInfo.gameSpeed;
-        float noteSpeed = GameMgr.Inst.gameInfo.noteSpeed;
+        m_Mesh.material = m_Materials[0];
+        string pathName = "Assets/Resources/Patterns/" + GameMgr.Inst.gameInfo.curSongDifference + ".txt";
+        FileStream fs = new FileStream(pathName, FileMode.Open);
+        StreamReader sr = new StreamReader(fs);
 
-        for(int i = 0; i < m_NoteLines.Length; i++)
+        float spacing = float.Parse(sr.ReadLine()) / 5;
+        float noteSpeed = float.Parse(sr.ReadLine()) / 5;
+        float gameSpeed = GameMgr.Inst.gameInfo.gameSpeed;
+
+        int count = int.Parse(sr.ReadLine());
+        for (int i = 0; i < count; i++)
+        {
+            string Line = sr.ReadLine();
+            string[] data = Line.Split('\t');
+
+            for(int j = 0; j < data.Length; j++)
+            {
+                if (int.Parse(data[j]) != -1)
+                {
+                    CreateNote(int.Parse(data[j]), j, i * spacing * gameSpeed + (4 * gameSpeed * noteSpeed), RATELINE - (0.15f * gameSpeed * noteSpeed));
+                }
+            }
+
+            sr.ReadLine();
+        }
+
+        GameMgr.Inst.gameInfo.totalNoteCount = int.Parse(sr.ReadLine());
+
+        sr.Close();
+        fs.Close();
+        GameMgr.Inst.gameInfo.noteSpace = spacing;
+        GameMgr.Inst.gameInfo.noteSpeed = noteSpeed;
+
+        for (int i = 0; i < m_NoteLines.Length; i++)
         {
             m_NoteLines[i].position = new Vector3(m_NoteLines[i].position.x, m_NoteLines[i].position.y - (0.25f * gameSpeed * noteSpeed), 0);
         }
+
+        m_BGAPlayer.clip = MusicMgr.Inst.m_BGAs[GameMgr.Inst.gameInfo.curSongIdx];
+        StartCoroutine(IEnum_Play());
     }
 
     private void Update()
@@ -104,17 +139,20 @@ public class GameGame : MonoBehaviour
             {
                 CheckRate(dis / gameSpeed / noteSpeed);
 
-                CreateNote(0, line, hit.transform.localPosition.y + GameMgr.Inst.gameInfo.doubleNoteValue * GameMgr.Inst.gameInfo.noteSpace * GameMgr.Inst.gameInfo.gameSpeed * GameMgr.Inst.gameInfo.noteSpeed);
+                CreateNote(0, line, hit.transform.localPosition.y + GameMgr.Inst.gameInfo.doubleNoteValue * GameMgr.Inst.gameInfo.noteSpace * GameMgr.Inst.gameInfo.gameSpeed * GameMgr.Inst.gameInfo.noteSpeed, RATELINE - (0.15f * gameSpeed * noteSpeed));
                 Destroy(hit.collider.gameObject);
                 return;
             }
         }
     }
 
-    void CreateNote(int noteType, int line, float yPos)
+    void CreateNote(int noteType, int line, float yPos, float breakY)
     {
         GameObject go = Instantiate(m_NotePrefabs[noteType], m_NoteParent);
         go.transform.localPosition = new Vector3(m_NoteLines[line].localPosition.x, yPos, 0);
+
+        GameNote gameNote = go.GetComponent<GameNote>();
+        gameNote.Initialize(breakY);
     }
 
     void CheckRate(float dis)
@@ -162,5 +200,20 @@ public class GameGame : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    public void Game_Result()
+    {
+        MusicMgr.Inst.m_Musics[GameMgr.Inst.gameInfo.curSongIdx].Stop();
+        m_BGAPlayer.Stop();
+    }
+
+    IEnumerator IEnum_Play()
+    {
+        MusicMgr.Inst.m_Musics[GameMgr.Inst.gameInfo.curSongIdx].PlayDelayed(4);
+        yield return new WaitForSeconds(4);
+
+        m_BGAPlayer.Play();
+        m_Mesh.material = m_Materials[1];
     }
 }

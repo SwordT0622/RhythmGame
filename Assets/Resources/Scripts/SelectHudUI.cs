@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using System.Linq;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SelectHudUI : MonoBehaviour
@@ -82,6 +85,48 @@ public class SelectHudUI : MonoBehaviour
                 m_DifImgs[curSongDif].sprite = m_DifSelectSprites[curSongDif];
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GameMgr.Inst.gameInfo.curSongIdx = curSongNum;
+            string songName = MusicInfo.Inst.songNames[curSongNum];
+            string[] s = songName.Split(" ");
+            songName = "";
+            for(int i = 0; i < s.Length; i++)
+            {
+                songName += s[i] + "_";
+            }
+
+            string difference = "";
+            switch (curSongDif)
+            {
+                case 0:
+                    {
+                        difference = "easy";
+                        break;
+                    }
+                case 1:
+                    {
+                        difference = "normal";
+                        break;
+                    }
+                case 2:
+                    {
+                        difference = "hard";
+                        break;
+                    }
+                case 3:
+                    {
+                        difference = "insane";
+                        break;
+                    }
+            }
+
+            string song = songName + difference;
+            GameMgr.Inst.gameInfo.curSongDifference = song;
+
+            SceneManager.LoadScene("GameScene");
+        }
     }
 
     public void Initialize()
@@ -122,7 +167,8 @@ public class SelectHudUI : MonoBehaviour
                 yield return new WaitForSeconds(0.01f);
             }
 
-            Destroy(m_MusicItems[0]);
+            Destroy(m_MusicItems[0].gameObject);
+            m_MusicItems[0] = null;
             for(int i = 0; i < m_MusicItems.Length - 1; i++)
             {
                 m_MusicItems[i] = m_MusicItems[i + 1];
@@ -144,7 +190,8 @@ public class SelectHudUI : MonoBehaviour
                 yield return new WaitForSeconds(0.01f);
             }
 
-            Destroy(m_MusicItems[8]);
+            Destroy(m_MusicItems[8].gameObject);
+            m_MusicItems[8] = null;
             for (int i = m_MusicItems.Length - 1; i > 0; i--)
             {
                 m_MusicItems[i] = m_MusicItems[i - 1];
@@ -202,6 +249,14 @@ public class SelectHudUI : MonoBehaviour
             m_curSongImg.transform.Rotate(new Vector3(-9, 0, 0));
             m_curSongImg.transform.localPosition += new Vector3(0, 12f, 0);
             yield return new WaitForSeconds(0.006f);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        for(int i = 0; i < m_MusicItems.Length; i++)
+        {
+            Destroy(m_MusicItems[i].gameObject);
         }
     }
 }
